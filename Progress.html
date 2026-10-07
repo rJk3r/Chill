@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dangerous Cyber Tracker</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=VT323&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Default Dangerous Cyber Theme */
+            --theme-title: #ffffff;
+            --theme-title-glow: rgba(0, 255, 255, 0.8);
+            
+            --theme-border: #ff3300; /* Aggressive Red/Orange border */
+            --theme-border-glow: rgba(255, 51, 0, 0.7);
+            
+            --theme-fill: #ff6600; /* Neon Orange */
+            --theme-fill-glow: rgba(255, 102, 0, 0.8);
+            
+            --bg-dark: #07070a;
+            --carbon-bg: #111;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body, html {
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden; /* STRICTLY DISABLE NATIVE SCROLLING */
+            background-color: var(--bg-dark);
+            font-family: 'Orbitron', sans-serif;
+            color: white;
+            touch-action: none; /* Block touch gestures on mobile */
+        }
+
+        .cyber-bg-container {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 0;
+            overflow: hidden;
+            background: radial-gradient(circle at center 30%, #151520 0%, var(--bg-dark) 100%);
+        }
+
+        .cyber-grid {
+            position: absolute;
+            bottom: -30vh; left: -50vw; width: 200vw; height: 100vh;
+            background-image: 
+                linear-gradient(rgba(0, 255, 255, 0.2) 2px, transparent 2px),
+                linear-gradient(90deg, rgba(0, 255, 255, 0.2) 2px, transparent 2px);
+            background-size: 80px 80px;
+            transform: perspective(700px) rotateX(75deg);
+            animation: gridScroll 2s linear infinite;
+        }
+        
+        .cyber-grid::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(to bottom, var(--bg-dark) 0%, transparent 40%, var(--bg-dark) 100%);
+        }
+
+        @keyframes gridScroll {
+            0% { background-position: 0 0; }
+            100% { background-position: 0 80px; }
+        }
+
+        #app {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+        }
+
+        #slider {
+            width: 100%;
+            height: 100%;
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.2, 1);
+        }
+
+        .section {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        .section.state-zero {
+            --theme-title: #ff003c; /* Red */
+            --theme-title-glow: rgba(255, 0, 60, 0.9);
+            --theme-border: #ff003c;
+            --theme-border-glow: rgba(255, 0, 60, 0.8);
+            --theme-fill: transparent;
+            --theme-fill-glow: transparent;
+        }
+
+        .section.state-max {
+            --theme-title: #ff00aa; /* Pink */
+            --theme-title-glow: rgba(255, 0, 170, 0.9);
+            --theme-border: #39ff14; /* Lime */
+            --theme-border-glow: rgba(57, 255, 20, 0.8);
+            --theme-fill: #00ff00; /* Green */
+            --theme-fill-glow: rgba(0, 255, 0, 0.9);
+        }
+
+        .title {
+            color: var(--theme-title);
+            font-size: clamp(3rem, 7vw, 6rem);
+            text-transform: uppercase;
+            font-weight: 900;
+            letter-spacing: 5px;
+            text-shadow: 
+                4px 4px 0px #000,
+                0 0 20px var(--theme-title-glow);
+            transform: skewX(-15deg);
+            margin-bottom: 8vh;
+            animation: glitch-float 3s infinite alternate;
+        }
+
+        @keyframes glitch-float {
+            0% { transform: skewX(-15deg) translateY(0px); text-shadow: 4px 4px 0px #000, 0 0 20px var(--theme-title-glow); }
+            100% { transform: skewX(-15deg) translateY(-10px); text-shadow: 6px 6px 0px #000, 0 0 35px var(--theme-title-glow); }
+        }
+
+        .hud-wrapper {
+            width: 90%;
+            max-width: 1200px; /* Massive presence */
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15vh;
+        }
+
+        .hud-bar-outer {
+            width: 100%;
+            height: clamp(100px, 18vw, 140px); /* Taller and aggressive */
+            background: var(--theme-border);
+            /* Sharp angular cuts on corners */
+            clip-path: polygon(40px 0, 100% 0, calc(100% - 40px) 100%, 0 100%);
+            transform: skewX(-20deg); /* Aggressive slant */
+            padding: 6px; /* Border thickness */
+            box-shadow: 0 0 30px var(--theme-border-glow);
+            display: flex;
+            position: relative;
+        }
+
+        .hud-bar-inner {
+            flex-grow: 1;
+            background: 
+                repeating-linear-gradient(
+                    45deg,
+                    #0a0a0a,
+                    #0a0a0a 10px,
+                    #141414 10px,
+                    #141414 20px
+                ); /* Carbon fiber / industrial texture */
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start; /* Grow from left */
+        }
+
+        .overlay-percent {
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%) skewX(20deg); /* Counter-skew */
+            z-index: 20;
+            color: #fffb00; /* Bright Yellow */
+            font-size: clamp(4rem, 9vw, 8rem); /* HUGE */
+            font-weight: 900;
+            font-style: italic;
+            -webkit-text-stroke: 6px #000; /* Very thick black outline */
+            text-shadow: 8px 8px 0px #000;
+            pointer-events: none;
+            letter-spacing: 2px;
+        }
+
+        .hud-bar-fill {
+            height: 100%;
+            width: 0%; /* Dynamic JS width */
+            background: var(--theme-fill);
+            box-shadow: 0 0 30px var(--theme-fill-glow);
+            transition: width 1s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Snappy gaming transition */
+            position: relative;
+            z-index: 5;
+        }
+
+        /* Hazard stripes overlay ON TOP of the fill */
+        .hud-bar-fill::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 20px,
+                rgba(0,0,0,0.4) 20px,
+                rgba(0,0,0,0.4) 40px
+            );
+            z-index: 6;
+            pointer-events: none;
+        }
+
+        .sad-faces-marquee {
+            position: absolute;
+            top: 0; left: 0; width: 200%; height: 100%;
+            display: flex;
+            align-items: center;
+            color: #ff003c;
+            font-size: clamp(2rem, 4vw, 3rem);
+            font-weight: 900;
+            letter-spacing: 15px;
+            white-space: nowrap;
+            text-shadow: 3px 3px 0px #000, 0 0 15px rgba(255,0,60,0.8);
+            z-index: 2;
+            animation: scrollSadFaces 12s linear infinite;
+        }
+
+        @keyframes scrollSadFaces {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        #fixed-controls {
+            position: fixed;
+            bottom: 4vh;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 20px;
+            z-index: 50;
+        }
+
+        .btn {
+            width: 70px;
+            height: 70px;
+            background: #000;
+            border: 4px solid #fff;
+            color: #fff;
+            font-family: 'VT323', monospace; /* Pixelated look */
+            font-size: 2.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            image-rendering: pixelated;
+            box-shadow: 6px 6px 0px rgba(0,0,0,0.8);
+            transition: transform 0.1s;
+        }
+
+        .btn:active {
+            transform: translate(4px, 4px);
+            box-shadow: 2px 2px 0px rgba(0,0,0,0.8);
+        }
+
+        .btn.disabled {
+            opacity: 0.3;
+            pointer-events: none;
+        }
+
+        /* Eye Icon SVG */
+        .btn svg {
+            width: 50%;
+            height: 50%;
+            fill: currentColor;
+        }
+
+        #modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            background: rgba(0, 0, 0, 0.9); /* Pure black-ish */
+            display: flex;
+            align-items: flex-end; /* Bottom placement */
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s ease;
+        }
+
+        #modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .undertale-box {
+            border: 8px solid white; /* Thick white pixel border */
+            background: black;
+            color: white;
+            width: 90%;
+            max-width: 800px;
+            min-height: 220px;
+            margin-bottom: 10vh;
+            padding: 35px 40px;
+            font-family: 'VT323', monospace;
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            line-height: 1.5;
+            position: relative;
+            box-shadow: 0 0 0 4px black inset, 0 0 0 4px black; /* Double border effect */
+        }
+
+        .modal-close {
+            position: absolute;
+            bottom: 20px;
+            right: 30px;
+            background: transparent;
+            border: none;
+            color: #a0a0a0;
+            font-family: 'VT323', monospace;
+            cursor: pointer;
+            font-size: 1.5rem;
+            animation: pulse-close 1s infinite step-end;
+        }
+
+        @keyframes pulse-close {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="cyber-bg-container">
+        <div class="cyber-grid"></div>
+    </div>
+
+    <div id="app">
+        <div id="slider">
+            <!-- Sections generated via JS -->
+        </div>
+    </div>
+
+    <div id="fixed-controls">
+        <button id="btn-down" class="btn" onclick="navigate(1)">↓</button>
+        <button id="btn-up" class="btn disabled" onclick="navigate(-1)">↑</button>
+        <button id="btn-view" class="btn" onclick="openModal()">
+            <!-- Eye icon -->
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+        </button>
+    </div>
+
+    <div id="modal-overlay">
+        <div class="undertale-box">
+            <span id="modal-text"></span>
+            <button class="modal-close" onclick="closeModal()">[X]</button>
+        </div>
+    </div>
+
+    <script>
+        const sectionsData = [
+            { title: 'Core', percentText: '85.7%', percentNum: 85.7, desc: 'Core logic and memory management: 85.7% (complete)' },
+            { title: 'ABI', percentText: '78%', percentNum: 78, desc: 'Application Binary Interface implementation: 78% (complete)' },
+            { title: 'ADL', percentText: '70%', percentNum: 70, desc: 'Abstract Data Layer mapping: 70% (complete)' },
+            { title: 'FlyGraph', percentText: '68%', percentNum: 68, desc: 'Graph-based execution engine: 68% (complete)' },
+            { title: 'Filesystem', percentText: '53%', percentNum: 53, desc: 'Virtual file system and I/O handlers: 53% (complete)' },
+            { title: 'VibeScript', percentText: '14%', percentNum: 14, desc: 'Visual-Script System compiler: 14% (complete)' },
+            { title: 'Audio System', percentText: '0%', percentNum: 0, desc: 'Audio system: prototype (not realised)' },
+            { title: 'Building', percentText: '80%', percentNum: 80, desc: 'Cross-platform CMake toolchains: 80% (not tested)' },
+            { title: 'Unit Tests', percentText: '0%', percentNum: 0, desc: 'Unit tests: 0% (Get out from here)' },
+            { title: 'Render', percentText: '100%', percentNum: 100, desc: 'Rendering engine: 100% (In tests)' },
+            { title: 'Bindings', percentText: '33.6%', percentNum: 33.6, desc: 'Python and C# bindings: 33.6% (Not tested)' }
+        ];
+
+        let currentIndex = 0;
+        let typewriterInterval;
+        const slider = document.getElementById('slider');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalText = document.getElementById('modal-text');
+        
+        const btnUp = document.getElementById('btn-up');
+        const btnDown = document.getElementById('btn-down');
+
+        function initApp() {
+            sectionsData.forEach((sec, index) => {
+                const sectionDiv = document.createElement('div');
+                sectionDiv.className = 'section';
+                
+                // State conditional classes
+                if (sec.percentNum === 0) sectionDiv.classList.add('state-zero');
+                if (sec.percentNum === 100) sectionDiv.classList.add('state-max');
+                
+                const isZero = sec.percentNum === 0;
+                let barContent = `<div class="hud-bar-fill" id="fill-${index}" style="width: 0%;"></div>`;
+                
+                if (isZero) {
+                    const sadPattern = ";[ ;[ ;[ ;[ ;[ ;[ ;[ ;[ ;[ ;[ ;[ ;[ ;[ ;[ ;[ ;[ ;[ ;[ ;[ ;[ ";
+                    barContent += `<div class="sad-faces-marquee">${sadPattern}${sadPattern}</div>`;
+                }
+
+                sectionDiv.innerHTML = `
+                    <h1 class="title">${sec.title}</h1>
+                    <div class="hud-wrapper">
+                        <div class="hud-bar-outer">
+                            <div class="hud-bar-inner">
+                                <div class="overlay-percent">${sec.percentText}</div>
+                                ${barContent}
+                            </div>
+                        </div>
+                    </div>
+                `;
+                slider.appendChild(sectionDiv);
+            });
+
+            updateUI();
+        }
+
+        function navigate(direction) {
+            const newIndex = currentIndex + direction;
+            if (newIndex >= 0 && newIndex < sectionsData.length) {
+                // Instantly drain old bar
+                const oldFill = document.getElementById(`fill-${currentIndex}`);
+                if(oldFill) oldFill.style.width = '0%';
+
+                currentIndex = newIndex;
+                slider.style.transform = `translateY(-${currentIndex * 100}vh)`;
+                updateUI();
+            }
+        }
+
+        function updateUI() {
+            // Manage button states
+            btnUp.classList.toggle('disabled', currentIndex === 0);
+            btnDown.classList.toggle('disabled', currentIndex === sectionsData.length - 1);
+
+            // Delay fill animation so it triggers after slide starts moving
+            setTimeout(() => {
+                const activeFill = document.getElementById(`fill-${currentIndex}`);
+                if(activeFill) {
+                    activeFill.style.width = `${sectionsData[currentIndex].percentNum}%`;
+                }
+            }, 300);
+        }
+
+        function openModal() {
+            const fullText = "* " + sectionsData[currentIndex].desc;
+            modalText.innerHTML = "";
+            modalOverlay.classList.add('active');
+            
+            clearInterval(typewriterInterval);
+            let charIndex = 0;
+            
+            // Fast text rendering for pixel vibe
+            typewriterInterval = setInterval(() => {
+                if (charIndex < fullText.length) {
+                    modalText.innerHTML += fullText.charAt(charIndex);
+                    charIndex++;
+                } else {
+                    clearInterval(typewriterInterval);
+                }
+            }, 35); 
+        }
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+            clearInterval(typewriterInterval);
+        }
+
+        modalOverlay.addEventListener('click', (e) => {
+            if(e.target === modalOverlay) closeModal();
+        });
+
+        window.addEventListener('wheel', (e) => e.preventDefault(), { passive: false });
+        window.addEventListener('touchmove', (e) => e.preventDefault(), { passive: false });
+
+        window.addEventListener('keydown', (e) => {
+            // Prevent all default browser scrolling keystrokes
+            const forbiddenKeys = ['ArrowUp', 'ArrowDown', 'Space', 'PageUp', 'PageDown', 'Home', 'End'];
+            if (forbiddenKeys.includes(e.code)) {
+                e.preventDefault();
+            }
+            
+            // Custom game-like keyboard bindings
+            if (modalOverlay.classList.contains('active')) {
+                // Undertale confirm/cancel keys
+                if (['KeyZ', 'KeyX', 'Enter', 'Escape'].includes(e.code)) {
+                    closeModal();
+                }
+            } else {
+                if (e.code === 'ArrowUp') navigate(-1);
+                if (e.code === 'ArrowDown') navigate(1);
+            }
+        }, { passive: false });
+
+        // Kickoff
+        window.onload = initApp;
+
+    </script>
+</body>
+</html>
