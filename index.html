@@ -217,7 +217,8 @@
             text-transform: uppercase;
         }
 
-        .architecture-section {
+        .architecture-section,
+        .dev-progress-section {
             display: flex;
             justify-content: center;
             padding: 0 20px 80px;
@@ -271,6 +272,62 @@
             70% { box-shadow: 0 0 0 10px rgba(255, 202, 40, 0); }
             100% { box-shadow: 0 0 0 0 rgba(255, 202, 40, 0); }
         }
+
+        /* --- НОВЫЕ СТИЛИ ДЛЯ КАРТОЧКИ DEV-PROGRESS --- */
+        .card-tracker {
+            width: 100%;
+            max-width: 800px;
+            border-color: #607d8b; /* Серая рамка */
+            background: rgba(45, 50, 55, 0.8); /* Темно-серый фон */
+            box-shadow: 0 10px 30px rgba(96, 125, 139, 0.15);
+        }
+
+        .card-tracker::before {
+            background: linear-gradient(90deg, transparent, #00ff66); /* Зеленая бегущая линия */
+        }
+
+        .card-tracker:hover {
+            border-color: #00ff66; /* Зеленая рамка при наведении */
+            box-shadow: 
+                0 15px 40px rgba(0, 0, 0, 0.6),
+                0 0 20px rgba(0, 255, 102, 0.25) inset; /* Зеленое свечение */
+        }
+
+        .card-tracker h2 {
+            color: #b0bec5; /* Серый текст в спокойном состоянии */
+            transition: color 0.4s ease;
+        }
+
+        .card-tracker:hover h2 {
+            color: #00ff66; /* Зеленый текст при наведении */
+        }
+
+        .card-tracker p {
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .bug-icon {
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.4s ease;
+        }
+
+        .bug-icon svg {
+            filter: drop-shadow(0 0 8px rgba(0, 136, 255, 0.6));
+            transition: all 0.3s ease;
+        }
+
+        .card-tracker:hover .bug-icon {
+            transform: scale(1.1) translateY(-5px);
+        }
+
+        .card-tracker:hover .bug-icon svg {
+            filter: drop-shadow(0 0 15px rgba(0, 136, 255, 0.9)); /* Усиленное свечение синего жука */
+        }
+        /* --------------------------------------------- */
 
         /* Adaptive Styles */
         @media (max-width: 768px) {
@@ -334,6 +391,28 @@
             <div class="card-badge">PRESS TO WATCH</div>
             <h2>Architecture</h2>
             <p>Check primary architecture</p>
+        </a>
+    </section>
+
+    <!-- НОВАЯ СЕКЦИЯ DEV-PROGRESS -->
+    <section class="dev-progress-section">
+        <a href="#" class="card card-tracker" style="text-decoration: none;">
+            <div class="bug-icon">
+                <!-- SVG-иконка синего жука (трекера) -->
+                <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#0088ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect width="8" height="14" x="8" y="6" rx="4"/>
+                    <path d="m19 7-3 2"/>
+                    <path d="m5 7 3 2"/>
+                    <path d="m19 19-3-2"/>
+                    <path d="m5 19 3-2"/>
+                    <path d="M20 13h-4"/>
+                    <path d="M4 13h4"/>
+                    <path d="m10 4 1 2"/>
+                    <path d="m14 4-1 2"/>
+                </svg>
+            </div>
+            <h2>Check dev-progress</h2>
+            <p>watch progress of engine modules realisation.</p>
         </a>
     </section>
 
